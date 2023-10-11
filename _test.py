@@ -10,8 +10,46 @@ def browser():
     driver = webdriver.Chrome()
     yield driver
     driver.quit()
+
+@pytest.mark.there_or_not
+def test_web_able1(browser):
+    browser.get("https://pyapp.unhas.ac.id/laboratorium/")
     
-def test_web_able(browser):
+    link_element = browser.find_element(By.ID, "headingFour")
+    button = link_element.find_element(By.TAG_NAME, "button")
+    
+    browser.execute_script("arguments[0].scrollIntoView(true);", button)
+    time.sleep(3)
+    
+    browser.execute_script("arguments[0].click();", button)
+    
+    data = browser.find_element(By.ID, 'collapseFour')
+    list = data.find_element(By.CLASS_NAME, 'list-group')
+    labs = list.find_elements(By.TAG_NAME, 'a')
+    
+    for lab in labs:
+        browser.execute_script("arguments[0].click();", lab)
+        time.sleep(3)
+
+        info = browser.find_element(By.CLASS_NAME, 'list-group-item')
+
+        browser.execute_script("arguments[0].scrollIntoView(true);", info)
+        time.sleep(3)
+
+        string = "http"
+        script = f'return document.body.innerText.includes("{string}");'
+        text_found = browser.execute_script(script)
+
+        if(text_found):
+            print("Sudah ada laboratorium produksi yang mempunyai alamat website")
+            break
+        else:
+            print("Belum ada laboratorium produksi yang mempunyai alamat website") 
+
+
+
+@pytest.mark.details   
+def test_web_able2(browser):
     browser.get("https://pyapp.unhas.ac.id/laboratorium/")
     
     link_element = browser.find_element(By.ID, "headingFour")
