@@ -13,33 +13,45 @@ def browser():
     
 def test_web_able(browser):
     browser.get("https://pyapp.unhas.ac.id/laboratorium/")
+    
     link_element = browser.find_element(By.ID, "headingFour")
     button = link_element.find_element(By.TAG_NAME, "button")
+    
     browser.execute_script("arguments[0].scrollIntoView(true);", button)
     time.sleep(3)
+    
     browser.execute_script("arguments[0].click();", button)
-    lab = browser.find_element(By.ID, 'collapseFour')
-    link_elements = lab.find_element(By.CLASS_NAME, 'list-group')
-    elements = link_elements.find_elements(By.TAG_NAME, 'a')
-
-    for link in elements:
-        browser.execute_script("arguments[0].click();", link)
+    
+    data = browser.find_element(By.ID, 'collapseFour')
+    list = data.find_element(By.CLASS_NAME, 'list-group')
+    labs = list.find_elements(By.TAG_NAME, 'a')
+    
+    exists = 0
+    nothing = 0
+    
+    for lab in labs:
+        browser.execute_script("arguments[0].click();", lab)
         time.sleep(3)
 
-        list = browser.find_element(By.CLASS_NAME, 'list-group-item')
+        name = lab.text
+        info = browser.find_element(By.CLASS_NAME, 'list-group-item')
 
-        browser.execute_script("arguments[0].scrollIntoView(true);", list)
+        browser.execute_script("arguments[0].scrollIntoView(true);", info)
         time.sleep(3)
 
-        text_to_search = "http"
-        script = f'return document.body.innerText.includes("{text_to_search}");'
+        string = "http"
+        script = f'return document.body.innerText.includes("{string}");'
         text_found = browser.execute_script(script)
 
         if(text_found):
-            print("Ada laboratorium Produksi yang sudah mempunyai alamat website")
-            break
+            print(name, "mempunyai alamat website")
+            exists += 1
         else:
-            print("Belum ada laboratorium Produksi yang sudah mempunyai alamat website")
+            print(name, "belum mempunyai alamat website")
+            nothing += 1
+            
+    print("Ada", exists, "lab yang mempunyai alamat website")
+    print("Ada", nothing, "lab yang tidak mempunyai alamat website")
 
 
 
