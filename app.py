@@ -14,23 +14,33 @@ driver.execute_script("arguments[0].click();", button)
 
 time.sleep(3)
 
-lab = driver.find_element(By.ID, 'collapseFour')
-link_elements = lab.find_element(By.CLASS_NAME, 'list-group')
-elements = link_elements.find_elements(By.TAG_NAME, 'a')
+data = driver.find_element(By.ID, 'collapseFour')
+list = data.find_element(By.CLASS_NAME, 'list-group')
+labs = list.find_elements(By.TAG_NAME, 'a')
 
-for link in elements:
-    #link.click()
-    driver.execute_script("arguments[0].click();", link)
+exists = 0
+nothing = 0
+    
+for lab in labs:
+    driver.execute_script("arguments[0].click();", lab)
     time.sleep(3)
 
-    list = driver.find_element(By.CLASS_NAME, 'list-group-item')
+    name = lab.text
+    info = driver.find_element(By.CLASS_NAME, 'list-group-item')
 
-    driver.execute_script("arguments[0].scrollIntoView(true);", list)
+    driver.execute_script("arguments[0].scrollIntoView(true);", info)
+    time.sleep(3)
 
-    fa = list.find_element(By.CLASS_NAME, 'fa fa-globe')
-    assert fa is not None, "Elemen tidak ditemukan."
+    string = "http"
+    script = f'return document.body.innerText.includes("{string}");'
+    text_found = driver.execute_script(script)
 
-
-time.sleep(3)
-
-driver.close()
+    if(text_found):
+        print(name, "mempunyai alamat website")
+        exists += 1
+    else:
+        print(name, "belum mempunyai alamat website")
+        nothing += 1
+            
+    print("Ada", exists, "lab yang mempunyai alamat website")
+    print("Ada", nothing, "lab yang tidak mempunyai alamat website")

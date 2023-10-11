@@ -51,13 +51,4 @@ def test_web_able(browser):
             nothing += 1
             
     print("Ada", exists, "lab yang mempunyai alamat website")
-    print("Ada", nothing, "lab yang tidak mempunyai alamat website")
-
-
-
-
-        
-            
-
-    
-    
+    print("Ada", nothing, "lab yang tidak mempunyai alamat website")       
